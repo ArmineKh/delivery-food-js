@@ -27,8 +27,22 @@ const modalPrice = document.querySelector('.modal-pricetag');
 const buttonClearCart = document.querySelector('.clear-cart')
 
 let login = localStorage.getItem('login');
-// const cart = JSON.parse(localStorage.getItem('cart'));
+
 const cart = [];
+
+const loadCart = function(){
+  if(JSON.parse(localStorage.getItem(login))){
+    JSON.parse(localStorage.getItem(login)).forEach(function(item){
+      cart.push(item);
+    })
+  }
+}
+
+// const cart = loadCart() || [];
+
+const saveCart = function(){
+  localStorage.setItem(login, JSON.stringify(cart));
+}
 
 const getData = async function(url){
   const response = await window.fetch(url);
@@ -60,6 +74,7 @@ function toggleModalAuth(){
 function authorized(){
   function logOut(){
     login = null;
+    cart.length = 0;
     localStorage.removeItem('login');
     buttonAuth.style.display = '';
     userName.style.display = '';
@@ -79,6 +94,7 @@ function authorized(){
   cartButton.style.display = 'flex'
 
   buttonOut.addEventListener('click', logOut);
+  loadCart();
 }
 
 function maskInput(string){
@@ -237,7 +253,7 @@ function checkAuth(){
         });
       }
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
+    saveCart();
  }
 
  function renderCart(){
@@ -282,7 +298,7 @@ function changeCount(event){
       }
     renderCart();
   }
-
+  saveCart(); 
 }
 
 
